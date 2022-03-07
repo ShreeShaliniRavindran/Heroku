@@ -22,6 +22,9 @@ with open('Model/tf_idf_vectorizermodel.pkl','rb') as fp:
 with open('Model/recommendation_model.pkl','rb') as fp:
 	recommend_model = pickle.load(fp)
 
+PORT = process.env.PORT | '8000'
+app = express()
+app.set("port",PORT)
 @app.route('/')
 def home():
 	return render_template('index_recommend.html')
