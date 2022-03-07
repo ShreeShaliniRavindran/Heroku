@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 
 app = Flask(__name__)
 
-with open('Model/model.pkl','rb') as fp:
-	model = pickle.load(fp)
+# with open('Model/model.pkl','rb') as fp:
+# 	model = pickle.load(fp)
 with open('Model/lr_model.pkl','rb') as fp:
 	lr_model = pickle.load(fp)
 with open('Model/tf_idf_vectorizermodel.pkl','rb') as fp:
