@@ -1,29 +1,63 @@
 <!DOCTYPE html>
 <html >
 <head>
-  <meta charset="UTF-8">
+  <!-- <meta charset="UTF-8"/> -->
   <title>Demo</title>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link rel='stylesheet' href="{{ url_for('static',filename='styles/style.css') }}" type="text/css" >
 </head>
 
-<body>
- <div class="login">
-  <h1>Sentiment Based Product Recommendation System</h1>
-  <img src="https://cdn-images-1.medium.com/fit/t/1600/480/1*QbBtk_xjwQWDW7aCrmGwfw.jpeg" width ="700">
+<body class="overall">
+ <div class="results">
+  <h1 class="text">Sentiment Based Product Recommendation System</h1>
+  <img class="overall" src="https://cdn-images-1.medium.com/fit/t/1600/480/1*QbBtk_xjwQWDW7aCrmGwfw.jpeg" width ="700">
 	
      <!-- Define a form to take input from user -->
         <form action="{{ url_for('recommend')}}" method="post">
-        <label for="SL">User Name</label>
-        <input type="text" name="user_name" required="required" />
-        <button type="submit">Get Recommended Products</button>
+        <label class="text" for="SL"> User Name</label>
+        <br>
+        <input class="css-input" type="text" name="user_name" required="required" />
+        <br>
+        <br>
+        <button class="btn"  type="submit">Get Recommended Products</button>
     </form>
 
    <br>
+ </div>
    <H2>
-   {{ OUTPUT }}
+   <!-- {{ OUTPUT }}
+   <ol>
+    
+    {%for i in OUTPUT%}
+      
+        <li>{{i}}</li>
+    {%endfor%}
+      
+    </ol> -->
  </H2>
+
+ <div >
+  <table class="purpleHorizon">
+    <thead>
+    <tr>
+    <th>{{title1}}</th>
+    <th>{{title2}} </th>
+    </tr>
+    </thead>
+    <tbody>
+      {%for i in products%}
+    <tr>
+    <td>{{i.get('product')}}</td><td>{{i.get('positive_rate')}}</td></tr>
+    {%endfor%}
+    <!-- <tr>
+    <td>cell1_2</td><td>cell2_2</td></tr> -->
+    </tbody>
+    </tr>
+    </table>
+ </div>
+
  </div>
 
 
 </body>
+
 </html>
