@@ -24,6 +24,8 @@ with open('Model/tf_idf_vectorizermodel.pkl','rb') as fp:
 	tf_idf_model = pickle.load(fp)
 with open('Model/recommendation_model.pkl','rb') as fp:
 	recommend_model = pickle.load(fp)
+with open('Model/sample_csv.pkl','rb') as fp:
+	sample_df = pickle.load(fp)
 
 @app.route('/')
 def home():
@@ -47,7 +49,7 @@ def recommend():
 	for product in products_list.keys():
 		products.append(product)
 
-	sample_df = pd.read_csv('Data/sample30.csv')
+	# sample_df = pd.read_csv('Data/sample30.csv')
 	filter_df = pd.DataFrame(columns=['product','feedback'])
 	final_recommend = pd.DataFrame(columns=['product','positive_rate'])
 
