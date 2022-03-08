@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import warnings
-
+import time
 from sklearn.metrics import adjusted_rand_score
 
 
@@ -44,6 +44,7 @@ def home():
 @app.route('/recommend',methods=['POST'])
 def recommend():
 	user_name = request.form.get('user_name')
+	start_time = time.time()
 	products_list = recommend_model.loc[user_name].sort_values(ascending=False)[0:20]
 	products = []
 	for product in products_list.keys():
@@ -53,29 +54,54 @@ def recommend():
 	filter_df = pd.DataFrame(columns=['product','feedback'])
 	final_recommend = pd.DataFrame(columns=['product','positive_rate'])
 
+	recom_time = time.time() - start_time
+
 	for product in products:
 		feedbacks = sample_df[sample_df['name']==product]['reviews_text'].tolist()
-		for fb in feedbacks:
-			temp_dict = {'product':product,'feedback':fb}
-			filter_df = filter_df.append(temp_dict,ignore_index = True)
-	
-	for product in products:
-		X_test = filter_df[filter_df['product']==product]['feedback'].tolist()
-		X_test_transformed = tf_idf_model.transform(X_test)
+		X_test_transformed = tf_idf_model.transform(feedbacks)
 		y_pred =  lr_model.predict(X_test_transformed)
 		positive_percent = (pd.Series(y_pred).value_counts()[0] / len(y_pred))*100
 		temp_dict = {'product': product ,'positive_rate':positive_percent} 
 		final_recommend = final_recommend.append(temp_dict,ignore_index=True)
 		final_recommend = final_recommend.sort_values(by='positive_rate',ascending=False)[0:5]
+	
+	feed_time  = time.time() - start_time
+
+	# for product in products:
+	# 	X_test = filter_df[filter_df['product']==product]['feedback'].tolist()
+	# 	X_test_transformed = tf_idf_model.transform(X_test)
+	# 	y_pred =  lr_model.predict(X_test_transformed)
+	# 	positive_percent = (pd.Series(y_pred).value_counts()[0] / len(y_pred))*100
+	# 	temp_dict = {'product': product ,'positive_rate':positive_percent} 
+	# 	final_recommend = final_recommend.append(temp_dict,ignore_index=True)
+	# 	final_recommend = final_recommend.sort_values(by='positive_rate',ascending=False)[0:5]
+
+	# 	for product in products:
+	# 	feedbacks = sample_df[sample_df['name']==product]['reviews_text'].tolist()
+	# 	for fb in feedbacks:
+	# 		temp_dict = {'product':product,'feedback':fb}
+	# 		filter_df = filter_df.append(temp_dict,ignore_index = True)
+	
+	# feed_time  = time.time() - start_time
+
+	# for product in products:
+	# 	X_test = filter_df[filter_df['product']==product]['feedback'].tolist()
+	# 	X_test_transformed = tf_idf_model.transform(X_test)
+	# 	y_pred =  lr_model.predict(X_test_transformed)
+	# 	positive_percent = (pd.Series(y_pred).value_counts()[0] / len(y_pred))*100
+	# 	temp_dict = {'product': product ,'positive_rate':positive_percent} 
+	# 	final_recommend = final_recommend.append(temp_dict,ignore_index=True)
+	# 	final_recommend = final_recommend.sort_values(by='positive_rate',ascending=False)[0:5]
 	# prod_list = []
 	# psr_list = []
 	# for i in final_recommend.index:
 	# 	prod_list.append(final_recommend['product'][i])
 	# 	psr_list.append(final_recommend['positive_rate'][i])
 	final_recommend = final_recommend.to_dict('records')
-	header_dummy = ['head_once']
+	# header_dummy = ['head_once']
+	end_time = time.time() - start_time
 
-	return render_template('index_recommend.html',products = final_recommend,title1="Product Name",title2 = "Positive Sentiment Rate",len = len(header_dummy))
+	return render_template('index_recommend.html',products = final_recommend,title1="Product Name",title2 = "Positive Sentiment Rate",start = start_time,recom = recom_time , feed = feed_time,end = end_time)
 
 if __name__ == "__main__":
     app.run()
