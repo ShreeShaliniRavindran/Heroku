@@ -1,35 +1,66 @@
 <!DOCTYPE html>
 <html >
 <head>
-  <meta charset="UTF-8">
+  <!-- <meta charset="UTF-8"/> -->
   <title>Demo</title>
-<link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+<link rel='stylesheet' href="{{ url_for('static',filename='styles/style.css') }}" type="text/css" >
 </head>
 
-<body>
- <div class="login">
-  <h1>IRIS Flower Prediction</h1>
-  <img src="https://miro.medium.com/max/1000/1*nfK3vGZkTa4GrO7yWpcS-Q.png" width ="500">
+<body class="overall">
+ <div class="results">
+  <h1 class="text">Sentiment Based Product Recommendation System - Vennal Venkatraman</h1>
+  <img class="overall" src="https://cdn-images-1.medium.com/fit/t/1600/480/1*QbBtk_xjwQWDW7aCrmGwfw.jpeg" width ="700">
 	
      <!-- Define a form to take input from user -->
-        <form action="{{ url_for('predict')}}" method="post">
-        <label for="SL">SL</label>
-        <input type="text" name="sepal_length" required="required" />
-        <label for="SW">SW</label>
-        <input type="text" name="sepal_width" required="required" />
-        <label for="PL">PL</label>
-        <input type="text" name="petal_length" required="required" />
-        <label for="PW">PW</label>
-        <input type="text" name="petal_width" required="required" />
-        <button type="submit">Predict</button>
+        <form action="{{ url_for('recommend')}}" method="post">
+        <label class="text" for="SL"> User Name</label>
+        <br>
+        <input class="css-input" type="text" name="user_name" required="required" />
+        <br>
+        <br>
+        <button class="btn"  type="submit">Get Recommended Products</button>
     </form>
 
    <br>
+ </div>
    <H2>
-   {{ OUTPUT }}
+   <!-- {{ OUTPUT }}
+   <ol>
+    
+    {%for i in OUTPUT%}
+      
+        <li>{{i}}</li>
+    {%endfor%}
+      
+    </ol> -->
  </H2>
+
+ <div >
+  <table class="purpleHorizon">
+    <thead>
+    <tr>
+    <th>{{title1}}</th>
+    <th>{{title2}} </th>
+    </tr>
+    </thead>
+    <tbody>
+      {%for i in products%}
+    <tr>
+    <td>{{i.get('product')}}</td><td>{{i.get('positive_rate')}}</td></tr>
+    {%endfor%}
+    </tbody>
+    </tr>
+    </table>
+    
+ </div>
+
+
+
+
+
  </div>
 
 
 </body>
+
 </html>
